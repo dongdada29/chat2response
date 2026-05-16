@@ -114,10 +114,10 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
       const transformed: ChatCompletionRequest = { ...req };
       
-      // MiniMax requires exact model naming (case sensitive)
-      // Map lowercase aliases if needed
-      if (!transformed.model?.toLowerCase().includes('minimax')) {
-        transformed.model = 'MiniMax-M2.7';
+      // MiniMax requires exact model naming (case sensitive, must be MiniMax- not minimax-)
+      if (transformed.model) {
+        // Map lowercase 'minimax-' to correct case 'MiniMax-'
+        transformed.model = transformed.model.replace(/^minimax-/i, 'MiniMax-');
       }
       
       // MiniMax requires specific message format
