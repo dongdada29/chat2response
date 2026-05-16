@@ -254,7 +254,7 @@ export interface Usage {
 // Provider Types
 // ============================================
 
-export type ProviderName = 'glm' | 'kimi' | 'deepseek' | 'minimax';
+export type ProviderName = 'glm' | 'kimi' | 'deepseek' | 'minimax' | 'mimo';
 
 export interface ProviderConfig {
   name: string;
