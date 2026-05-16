@@ -70,6 +70,10 @@ export function convertResponsesToChat(body: ResponsesRequest): ChatCompletionRe
         if (lastAssistantMsg && lastAssistantMsg.role === 'assistant') {
           if (!lastAssistantMsg.tool_calls) lastAssistantMsg.tool_calls = [];
           lastAssistantMsg.tool_calls.push(toolCall);
+          // Preserve reasoning_content for thinking models (DeepSeek, GLM, etc.)
+          if (item.reasoning_content) {
+            lastAssistantMsg.reasoning_content = item.reasoning_content;
+          }
         } else {
           // Create a new assistant message if none exists to hold the tool call
           const msg: ChatMessage = {
@@ -77,6 +81,10 @@ export function convertResponsesToChat(body: ResponsesRequest): ChatCompletionRe
             content: '',
             tool_calls: [toolCall],
           };
+          // Preserve reasoning_content for thinking models
+          if (item.reasoning_content) {
+            msg.reasoning_content = item.reasoning_content;
+          }
           lastAssistantMsg = msg;
           messages.push(msg);
         }
@@ -706,16 +714,21 @@ export function convertChatToResponses(
   };
   
   const message = chat.choices[0]?.message;
-  let content = message?.content || '';
+  const content = message?.content || '';
   const toolCalls = message?.tool_calls;
-  
-  // Support reasoning_content for reasoning models (e.g., GLM-5)
+  // Extract reasoning_content for thinking models (DeepSeek, GLM, etc.)
   const reasoningContent = (message as unknown as Record<string, string> | undefined)?.reasoning_content;
-  if (!content && reasoningContent) {
-    content = reasoningContent;
-  }
   
   const output: OutputItem[] = [];
+  
+  // Add reasoning output if exists (for thinking models)
+  if (reasoningContent) {
+    output.push({
+      id: `reason_${uuidv4().replace(/-/g, '')}`,
+      type: 'reasoning',
+      content: [{ type: 'output_text', text: reasoningContent }],
+    });
+  }
   
   // Add text output
   if (content) {

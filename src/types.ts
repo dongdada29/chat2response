@@ -27,6 +27,8 @@ export interface InputItem {
   output?: string;
   summary?: SummaryPart[];
   encrypted_content?: string;
+  /** Reasoning content from thinking models */
+  reasoning_content?: string;
 }
 
 export interface ContentPart {
@@ -77,6 +79,8 @@ export interface ChatMessage {
   name?: string;
   tool_calls?: ToolCall[];
   tool_call_id?: string;
+  /** Reasoning content from thinking models (DeepSeek, GLM, etc.) */
+  reasoning_content?: string;
 }
 
 export interface ChatTool {
