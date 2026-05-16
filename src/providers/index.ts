@@ -83,8 +83,8 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   deepseek: {
     name: 'DeepSeek',
     baseUrl: 'https://api.deepseek.com/v1',
-    defaultModel: 'deepseek-chat',
-    models: ['deepseek-chat', 'deepseek-reasoner'],
+    defaultModel: 'deepseek-v4-flash',
+    models: ['deepseek-v4-flash', 'deepseek-v4-pro'],
     supportsTools: true,
     supportsStreaming: true,
     // DeepSeek follows OpenAI format closely, minimal transformation needed
@@ -95,9 +95,9 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
       // Remove unsupported fields
       delete (transformed as Record<string, unknown>)['store'];
       
-      // Use DeepSeek model if not specified
-      if (!transformed.model?.startsWith('deepseek')) {
-        transformed.model = 'deepseek-chat';
+      // Map model aliases if needed
+      if (transformed.model === 'deepseek-chat') {
+        transformed.model = 'deepseek-v4-flash';
       }
       
       return transformed;
