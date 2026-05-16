@@ -214,8 +214,10 @@ app.post('/v1/responses', async (req, res) => {
 app.post('/v1/chat/completions', async (req, res) => {
   try {
     const providerHeader = req.headers['x-provider'] as string;
+    const detectedProvider = detectProviderFromModel(req.body.model || '');
     const providerName: ProviderName = 
       (isProviderSupported(providerHeader) ? providerHeader : null) ||
+      detectedProvider ||
       (process.env.DEFAULT_PROVIDER as ProviderName) || 
       'deepseek';
     
