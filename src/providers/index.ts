@@ -140,22 +140,6 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
       return transformed;
     },
   },
-
-  mimo: {
-    name: 'MiMo',
-    baseUrl: 'https://token-plan-cn.xiaomimimo.com/v1',
-    defaultModel: 'mimo-v2.5-pro',
-    models: ['mimo-v2.5-pro'],
-    supportsTools: true,
-    supportsStreaming: true,
-    transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
-      const transformed: ChatCompletionRequest = { ...req };
-      if (!transformed.model) {
-        transformed.model = 'mimo-v2.5-pro';
-      }
-      return transformed;
-    },
-  },
 };
 
 export function getProvider(name: ProviderName): ProviderConfig {
@@ -205,5 +189,6 @@ export function detectProviderFromModel(modelId: string): ProviderName | null {
   if (modelLower.includes('kimi')) return 'kimi';
   if (modelLower.includes('deepseek')) return 'deepseek';
   if (modelLower.includes('minimax')) return 'minimax';
+  if (modelLower.includes('mimo')) return 'mimo';
   return null;
 }
