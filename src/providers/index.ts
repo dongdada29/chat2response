@@ -106,17 +106,18 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   
   minimax: {
     name: 'MiniMax',
-    baseUrl: 'https://api.minimax.chat/v1', // 国内版 API
-    defaultModel: 'minimax-2.7',
-    models: ['minimax-2.7'],
+    baseUrl: 'https://api.minimaxi.com/v1',
+    defaultModel: 'MiniMax-M2.7',
+    models: ['MiniMax-M2.7', 'MiniMax-M2.5', 'MiniMax-M2.1', 'MiniMax-M2'],
     supportsTools: true,
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
       const transformed: ChatCompletionRequest = { ...req };
       
-      // MiniMax uses different model naming
-      if (!transformed.model?.includes('minimax')) {
-        transformed.model = 'minimax-2.7';
+      // MiniMax requires exact model naming (case sensitive)
+      // Map lowercase aliases if needed
+      if (!transformed.model?.toLowerCase().includes('minimax')) {
+        transformed.model = 'MiniMax-M2.7';
       }
       
       // MiniMax requires specific message format
